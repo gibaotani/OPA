@@ -34,12 +34,23 @@ class itemDeConsumo {
 		$this->valor = (float)$valor;
 	}
 	
+	public function criar($id, $descricao, $valor) {
+		
+		$db = new db();
+		$sql = <<<SQL
+			INSERT INTO item_de_consumo (id, descricao, valor)
+			VALUES ($id, '$descricao', $valor)
+SQL;
+		$result = $db->query($sql);
+		return $result;
+	}
 	
 	// Funções de busca
 	public function buscarPorId($id) {
 		
 		$db = new db();
-		$item = $db->query("SELECT * FROM item_de_consumo WHERE ID = $id")->fetch_object();
+		$sql = "SELECT * FROM item_de_consumo WHERE ID = $id";
+		$item = $db->query($sql)->fetch_object();
 		
 		$this->setId($item->id);
 		$this->setDescricao($item->descricao);
