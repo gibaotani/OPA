@@ -11,7 +11,7 @@ class itemDeConsumo {
 	
 	// Funções acessoras
 	public function getId() {
-		return $this->id;
+		return (int)$this->id;
 	}
 	
 	public function setId($id) {
@@ -19,7 +19,7 @@ class itemDeConsumo {
 	}
 	
 	public function getDescricao() {
-		return $this->descricao;
+		return trim($this->descricao);
 	}
 	
 	public function setDescricao($descricao) {
@@ -35,25 +35,38 @@ class itemDeConsumo {
 	}
 	
 	public function criar($id, $descricao, $valor) {
-		
-		$db = new db();
-		$sql = <<<SQL
-			INSERT INTO item_de_consumo (id, descricao, valor)
-			VALUES ($id, '$descricao', $valor)
+		try {
+			$db = new db();
+			$sql = <<<SQL
+				INSERT INTO item_de_consumo (id, descricao, valor)
+				VALUES ($id, '$descricao', $valor)
 SQL;
-		$result = $db->query($sql);
-		return $result;
+			$result = $db->query($sql);
+			return $result;
+		} catch (Exception $e) {
+			print $e;
+			return false;
+		}
 	}
 	
 	// Funções de busca
 	public function buscarPorId($id) {
-		
-		$db = new db();
-		$sql = "SELECT * FROM item_de_consumo WHERE ID = $id";
-		$item = $db->query($sql)->fetch_object();
-		
-		$this->setId($item->id);
-		$this->setDescricao($item->descricao);
-		$this->setValor($item->valor);
+		try {
+			$db = new db();
+			$id = (int)$id;
+			$sql = "SELECT * FROM item_de_consumo WHERE ID = $id";
+			$item = $db->query($sql)->fetch_object();
+			if ($item) {
+				$this->setId($item->id);
+				$this->setDescricao($item->descricao);
+				$this->setValor($item->valor);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception $e) {
+			print $e;
+			return false;
+		}
 	}
 }

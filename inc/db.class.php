@@ -1,5 +1,6 @@
 <?php
 include_once "defs.inc.php";
+require_once "DBException.class.php";
 
 // Herda todos os atributos e métodos da classe mysqli (http://php.net/manual/en/book.mysqli.php)
 class db extends mysqli {
@@ -12,7 +13,7 @@ class db extends mysqli {
 		
 		// Tratamento de erros de conexão, seleção de DB e outros
 		if (mysqli_connect_error()) {
-	            die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
+	        throw new DBException('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());    
         }
 	}
 }//Fim da classe
